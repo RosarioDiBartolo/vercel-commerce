@@ -1,5 +1,5 @@
+import { StoreProductOption } from '@medusajs/types';
 import { ReadonlyURLSearchParams } from 'next/navigation';
-import { MedusaProductOption } from './medusa/types';
 
 export const createUrl = (pathname: string, params: URLSearchParams | ReadonlyURLSearchParams) => {
   const paramsString = params.toString();
@@ -8,7 +8,7 @@ export const createUrl = (pathname: string, params: URLSearchParams | ReadonlyUR
   return `${pathname}${queryString}`;
 };
 
-export const mapOptionIds = (productOptions: MedusaProductOption[]) => {
+export const mapOptionIds = (productOptions: StoreProductOption[]) => {
   // Maps the option titles to their respective ids
   const map: Record<string, string> = {};
   productOptions.forEach((option) => {

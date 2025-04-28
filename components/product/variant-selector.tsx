@@ -37,6 +37,9 @@ export function VariantSelector({
       {}
     )
   }));
+  
+  // console.log('combinations', combinations)
+  // console.log('option', options)
 
   return options.map((option) => (
     <dl className="mb-8" key={option.id}>
@@ -67,11 +70,14 @@ export function VariantSelector({
               (option) => option.name.toLowerCase() === key && option.values.includes(value)
             )
           );
+          console.log('filtered', filtered)
           const isAvailableForSale = combinations.find((combination) =>
             filtered.every(
               ([key, value]) => combination[key] === value && combination.availableForSale
             )
           );
+
+          console.log('isAvailableForSale', isAvailableForSale)
 
           // The option is active if it's in the url params.
           const isActive = searchParams.get(optionNameLowerCase) === value;

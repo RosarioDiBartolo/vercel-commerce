@@ -24,8 +24,10 @@
   "dependencies": {
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
+    "@medusajs/js-sdk": "^2.7.1",
+    "@medusajs/types": "^2.7.1",
     "clsx": "^2.0.0",
-    "next": "13.4.13-canary.15",
+    "next": "^15.4.0-canary.12",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
@@ -35,7 +37,6 @@
     "@types/node": "20.4.4",
     "@types/react": "18.2.16",
     "@types/react-dom": "18.2.7",
-    "@vercel/git-hooks": "^1.0.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.45.0",
     "eslint-config-next": "^13.4.12",

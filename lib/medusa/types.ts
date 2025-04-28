@@ -1,3 +1,5 @@
+import { StoreCart } from "@medusajs/types";
+
 export type MedusaProductCollection = {
   name: any;
   description: string | undefined;
@@ -134,7 +136,7 @@ export type ProductCategory = {
 
 export type MedusaProductVariant = {
   id: string;
-  title?: string;
+  title : string | null;
   product_id: string;
   product?: Product;
   prices?: MoneyAmount[];
@@ -350,7 +352,7 @@ export type MedusaCart = {
   subtotal?: number;
 };
 
-export type Cart = Partial<MedusaCart> & {
+export type Cart = Partial<StoreCart> & {
   lines: CartItem[];
   checkoutUrl: string;
   totalQuantity: number;
