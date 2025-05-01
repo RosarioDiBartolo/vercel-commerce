@@ -21,7 +21,7 @@ import { mapOptionIds } from "lib/utils"
 import { revalidateTag } from "next/cache"
 import { headers } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
-import { calculateVariantAmount, computeAmount, convertToDecimal } from "./helpers"
+import { calculateVariantAmount, convertToDecimal } from "./helpers"
 import { Cart, CartItem, Image, Product, ProductCollection, ProductOption, ProductVariant, SelectedOption } from "./types"
 
  
@@ -40,10 +40,17 @@ export async function getCategoryProducts(
   try{
   const { products } = await sdk.store.product.list({
     category_id: category?.id,
-    order: sortKey ? `${ reverse ?"-": null}${sortKey.toLowerCase()}` : undefined,
-  })
+    fields:  "*variants.calculated_price",  
+    region_id:(await sdk.store.region.list()).regions[0]?.id,
+    
+   })
 
-  return products.map(reshapeProduct)
+ 
+  const reshaped =   products.map(reshapeProduct)
+  if (sortKey === "PRICE") reshaped.sort((a, b) => +a.priceRange.maxVariantPrice.amount - +b.priceRange.maxVariantPrice.amount)
+  if ( reverse) reshaped.reverse()
+    
+    return reshaped
   }
   catch (error) {
     console.error("Error fetching products for category:", error)
@@ -57,20 +64,19 @@ export async function getCategoryProducts(
    const totalQuantity = lines.reduce((a, b) => a + b.quantity, 0);
    const checkoutUrl = '/checkout'; // todo: implement medusa checkout flow
    const currencyCode = cart.region?.currency_code.toUpperCase() || 'USD';
- 
-   let subtotalAmount = '0';
+    let subtotalAmount = '0';
    if (cart.subtotal && cart.region) {
-     subtotalAmount = computeAmount({ amount: cart.subtotal, region: cart.region }).toString();
+     subtotalAmount = convertToDecimal( cart.subtotal, cart.currency_code ).toString();
    }
  
-   let totalAmount = '0';
+   let totalAmount = 'Default Amount';
    if (cart.total && cart.region) {
-     totalAmount = computeAmount({ amount: cart.total, region: cart.region }).toString();
+     totalAmount = convertToDecimal( cart.subtotal, cart.currency_code ).toString();
    }
  
    let totalTaxAmount = '0';
    if (cart.tax_total && cart.region) {
-     totalTaxAmount = computeAmount({ amount: cart.tax_total, region: cart.region }).toString();
+     totalTaxAmount = convertToDecimal( cart.subtotal, cart.currency_code ).toString();
    }
  
    const cost = {
@@ -129,11 +135,13 @@ export async function getCategoryProducts(
      product,
      title: lineItem.product_description ?? ''
    };
+
+   console.log("  lineItem.variant?.calculated_price?.calculated_amount", lineItem.variant?.calculated_price  )
  
    const cost = {
      totalAmount: {
        amount: convertToDecimal(
-         lineItem.total,
+         lineItem.unit_price || 0,
          lineItem.variant?.calculated_price?.currency_code || 'EUR'
        ).toString(),
        currencyCode: lineItem.variant?.calculated_price?.currency_code?.toUpperCase() || 'EUR'
@@ -146,16 +154,16 @@ export async function getCategoryProducts(
      merchandise,
      cost,
      quantity
-   };
+   } as unknown  as CartItem;
  };
 // Helper to reshape product images
-const reshapeProductImageDTOs = (ProductImageDTOs?:StoreProductImage[], title?: string)  : Image=> {
+const reshapeProductImageDTOs = (ProductImageDTOs?:StoreProductImage[], title?: string)  : Image[]=> {
   return (
     ProductImageDTOs?.map(img => {
       const filename = img.url.split('/').pop()?.split('.')[0] || title || ''
-      return { ...img,  altText: `${title} - ${filename}` } 
+      return { ...img,  altText: `${title} - ${filename}` }  
     }) ?? []
-  )
+  ) as Image[]
 }
 
 // Helper to reshape product options
@@ -196,14 +204,14 @@ const reshapeProductVariant = (
     availableForSale,
     selectedOptions,
     price
-  } 
+  }  as ProductVariant
 };
 // Helper to reshape a product
 const reshapeProduct = (product: StoreProduct): Product  => {
   const variants = product.variants
   const firstVariant = variants?.[0]
-  const reshapeOption  = (o: StoreProductOption) =>reshapeProductOption(o, product )
-  const p: Product = {
+   const reshapeOption  = (o: StoreProductOption) =>reshapeProductOption(o, product )
+   const p  = {
     ...product,
     priceRange:   { maxVariantPrice: { amount: convertToDecimal(firstVariant?.calculated_price?.calculated_amount || 0, firstVariant?.calculated_price?.currency_code || "usd").toString(), currencyCode: firstVariant?.calculated_price?.currency_code?.toUpperCase() || "USD" } },
     createdAt: new Date(product.created_at as string),
@@ -217,7 +225,7 @@ const reshapeProduct = (product: StoreProduct): Product  => {
 
     options: product.options?.map( reshapeOption ) || [],
   }
-   return( p )
+   return( p as unknown as Product)
 }
 // Helper to reshape a category
 const reshapeCategory = (cat: any): ProductCollection => ({
@@ -242,7 +250,7 @@ export async function createCart()  {
 }
 
 export async function addToCart(cartId: string, item: { variantId: string; quantity: number })  {
-  const { cart } = await sdk.store.cart.createLineItem (cartId, 
+   await sdk.store.cart.createLineItem (cartId, 
     { variant_id: item.variantId, quantity: item.quantity ,},
     {
       fields: "items.variant"
@@ -250,24 +258,27 @@ export async function addToCart(cartId: string, item: { variantId: string; quant
    
   )
 
-  console.log("cart res", cart.items)
- }
+  }
 
 export async function removeFromCart(cartId: string, lineItemId: string)  {
    return await sdk.store.cart.deleteLineItem(cartId, lineItemId)
  }
 
 export async function updateCart(cartId: string, { lineItemId, quantity }: { lineItemId: string; quantity: number }) {
-  const { cart } = await sdk.store.cart.updateLineItem(cartId, lineItemId, { quantity })
-
-  return reshapeCart(cart)
+   await sdk.store.cart.updateLineItem(cartId, lineItemId, { quantity })
+ 
 }
 
 export async function getCart(cartId: string): Promise<Cart | null> {
+ 
   try {
     const { cart } = await sdk.store.cart.retrieve(cartId, {
-      fields: "*items.variant",
-    })
+      
+
+      fields: "*items.variant.*"
+    },
+    
+  )
     return reshapeCart( cart)
   } catch (error) {
     console.error("Failed to retrieve cart:", error)
@@ -289,7 +300,11 @@ export async function getProducts(options: { query?: string; reverse?: boolean; 
   const params: any = { limit: 100 }
   if (options.query) params.q = options.query
   if (options.categoryId) params.category_id = [options.categoryId]
-  const { products } = await sdk.store.product.list(params)
+  const { products } =   await sdk.store.product.list({    
+    fields:  "*variants.calculated_price",  
+    q: options.query,
+    region_id:(await sdk.store.region.list()).regions[0]?.id, 
+     })
   const result = products.map(reshapeProduct)
   if (options.sortKey === "PRICE") result.sort((a, b) => +a.priceRange.maxVariantPrice.amount - +b.priceRange.maxVariantPrice.amount)
   if (options.sortKey === "CREATED_AT") result.sort((a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime())
@@ -298,7 +313,10 @@ export async function getProducts(options: { query?: string; reverse?: boolean; 
 }
 
 export async function getProduct(handle: string): Promise<ReturnType<typeof reshapeProduct > | undefined> {
-  const { products } = await sdk.store.product.list({ handle, limit: 1 })
+  const { products } = await sdk.store.product.list({ handle, limit: 1,
+    fields:  "*variants.calculated_price",  
+    region_id:(await sdk.store.region.list()).regions[0]?.id, 
+     })
 
   return products[0]  &&  reshapeProduct(products[0])  
 }
@@ -319,7 +337,7 @@ export async function getMenu(menu: string): Promise<any[]> {
 
 // ISR revalidation handler
 export async function revalidate(req: NextRequest): Promise<NextResponse> {
-  const topic = headers().get("x-medusa-topic") || ""
+  const topic = (await headers()).get("x-medusa-topic") || ""
   const secret = req.nextUrl.searchParams.get("secret")
   if (secret !== process.env.MEDUSA_REVALIDATION_SECRET) {
     return NextResponse.json({ status: 401, message: "Invalid secret" })
