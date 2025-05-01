@@ -4,10 +4,11 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import WithSuspense from 'lib/with-suspense';
 import type { ListItem } from '.';
 import { FilterItem } from './item';
 
-export default function FilterItemDropdown({ list }: { list: ListItem[] }) {
+export default WithSuspense( function FilterItemDropdown({ list }: { list: ListItem[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [active, setActive] = useState('');
@@ -62,3 +63,4 @@ export default function FilterItemDropdown({ list }: { list: ListItem[] }) {
     </div>
   );
 }
+)

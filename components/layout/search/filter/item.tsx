@@ -1,13 +1,14 @@
 'use client';
 
 import clsx from 'clsx';
-import { SortFilterItem } from 'lib/constants';
+import { type SortFilterItem } from 'lib/constants';
 import { createUrl } from 'lib/utils';
+import WithSuspense from 'lib/with-suspense';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import type { ListItem, PathFilterItem } from '.';
+import type { ListItem, PathFilterItem as PathFilterItemType } from '.';
 
-function PathFilterItem({ item }: { item: PathFilterItem }) {
+const PathFilterItem = WithSuspense(({ item }: { item: PathFilterItemType }) =>{
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const active = pathname === item.path;
@@ -32,8 +33,8 @@ function PathFilterItem({ item }: { item: PathFilterItem }) {
     </li>
   );
 }
-
-function SortFilterItem({ item }: { item: SortFilterItem }) {
+)
+const SortFilterItem = WithSuspense(({ item }: { item: SortFilterItem }) =>{
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const active = searchParams.get('sort') === item.slug;
@@ -61,7 +62,7 @@ function SortFilterItem({ item }: { item: SortFilterItem }) {
     </li>
   );
 }
-
+)
 export function FilterItem({ item }: { item: ListItem }) {
   return 'path' in item ? <PathFilterItem item={item} /> : <SortFilterItem item={item} />;
 }

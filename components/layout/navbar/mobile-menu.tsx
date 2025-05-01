@@ -7,9 +7,10 @@ import { Fragment, useEffect, useState } from 'react';
 
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Menu } from 'lib/medusa/types';
+import WithSuspense from 'lib/with-suspense';
 import Search from './search';
 
-export default function MobileMenu({ menu }: { menu: Menu[] }) {
+export default WithSuspense( function MobileMenu({ menu }: { menu: Menu[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
@@ -96,3 +97,4 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
     </>
   );
 }
+)

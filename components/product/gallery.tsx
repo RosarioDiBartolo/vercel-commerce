@@ -3,11 +3,12 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { GridTileImage } from 'components/grid/tile';
 import { createUrl } from 'lib/utils';
+import WithSuspense from 'lib/with-suspense';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-export function Gallery({ images }: { images: { src: string; altText: string }[] }) {
+export const Gallery = WithSuspense(({ images }: { images: { src: string; altText: string }[] })=> {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const imageSearchParam = searchParams.get('image');
@@ -97,3 +98,4 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
     </>
   );
 }
+)

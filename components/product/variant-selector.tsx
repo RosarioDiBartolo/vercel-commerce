@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import { ProductOption, ProductVariant } from 'lib/medusa/types';
 import { createUrl } from 'lib/utils';
+import WithSuspense from 'lib/with-suspense';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -12,13 +13,13 @@ type Combination = {
   [key: string]: string | boolean; // ie. { color: 'Red', size: 'Large', ... }
 };
 
-export function VariantSelector({
+export const  VariantSelector = WithSuspense(({
   options,
   variants
 }: {
   options: ProductOption[];
   variants: ProductVariant[];
-}) {
+})=> {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const hasNoOptionsOrJustOneOption =
@@ -114,3 +115,4 @@ export function VariantSelector({
     </dl>
   ));
 }
+)

@@ -5,16 +5,17 @@ import clsx from 'clsx';
 import { addItem } from 'components/cart/actions';
 import LoadingDots from 'components/loading-dots';
 import { ProductVariant } from 'lib/medusa/types';
+import WithSuspense from 'lib/with-suspense';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 
-export function AddToCart({
-  variants,
-  availableForSale
-}: {
+export const AddToCart = WithSuspense<{
   variants: ProductVariant[];
   availableForSale: boolean;
-}) {
+}>(  ({
+  variants,
+  availableForSale
+}) =>{
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -67,3 +68,4 @@ export function AddToCart({
     </button>
   );
 }
+)

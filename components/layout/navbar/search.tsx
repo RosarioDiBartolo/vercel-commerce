@@ -5,8 +5,9 @@ import { useEffect, useState } from 'react';
 
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { createUrl } from 'lib/utils';
+import WithSuspense from 'lib/with-suspense';
 
-export default function Search() {
+export default WithSuspense( function Search() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchValue, setSearchValue] = useState('');
@@ -48,3 +49,4 @@ export default function Search() {
     </form>
   );
 }
+)
