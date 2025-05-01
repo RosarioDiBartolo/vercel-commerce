@@ -10,11 +10,10 @@ type ComputeAmountParams = {
  * Takes an amount, a region, and returns the amount as a decimal including or excluding taxes
  */
 export const computeAmount = ({ amount,   }: ComputeAmountParams) => {
-  const toDecimal = convertToDecimal(amount,  );
-
+ 
   const taxRate = 0 ;
 
-  const amountWithTaxes = toDecimal * (1 + taxRate);
+  const amountWithTaxes = amount * (1 + taxRate);
 
   return amountWithTaxes;
 };
@@ -24,22 +23,12 @@ export const computeAmount = ({ amount,   }: ComputeAmountParams) => {
  */
 export const calculateVariantAmount = (variant: StoreProductVariant): Money => {
   const currencyCode = variant.calculated_price?.currency_code ?? 'USD';
-  const amount = convertToDecimal(variant.calculated_price?.calculated_amount || 0, currencyCode).toString();
+  const amount =( variant.calculated_price?.calculated_amount || 0).toString();
   return {
     amount,
     currencyCode
   };
 };
 
-// Some currencies do not use decimal subunits (like cents)
-const noDivisionCurrencies = ['krw', 'jpy', 'vnd'];
-
-/**
- * Converts a raw amount to a decimal amount, considering if the currency uses cents
- */
-export const convertToDecimal = (amount: number, currencyCode = 'USD') => {
-  const divisor = noDivisionCurrencies.includes(currencyCode.toLowerCase()) ? 1 : 100;
-  return Math.floor(amount) / divisor;
-};
-
+ 
  

@@ -21,7 +21,7 @@ import { mapOptionIds } from "lib/utils"
 import { revalidateTag } from "next/cache"
 import { headers } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
-import { calculateVariantAmount, convertToDecimal } from "./helpers"
+import { calculateVariantAmount } from "./helpers"
 import { Cart, CartItem, Image, Product, ProductCollection, ProductOption, ProductVariant, SelectedOption } from "./types"
 
  
@@ -66,17 +66,17 @@ export async function getCategoryProducts(
    const currencyCode = cart.region?.currency_code.toUpperCase() || 'USD';
     let subtotalAmount = '0';
    if (cart.subtotal && cart.region) {
-     subtotalAmount = convertToDecimal( cart.subtotal, cart.currency_code ).toString();
+     subtotalAmount = cart.subtotal.toString();
    }
  
    let totalAmount = 'Default Amount';
    if (cart.total && cart.region) {
-     totalAmount = convertToDecimal( cart.subtotal, cart.currency_code ).toString();
+     totalAmount =  cart.total.toString();
    }
  
    let totalTaxAmount = '0';
    if (cart.tax_total && cart.region) {
-     totalTaxAmount = convertToDecimal( cart.subtotal, cart.currency_code ).toString();
+     totalTaxAmount = cart.tax_total.toString();
    }
  
    const cost = {
@@ -140,10 +140,7 @@ export async function getCategoryProducts(
  
    const cost = {
      totalAmount: {
-       amount: convertToDecimal(
-         lineItem.unit_price || 0,
-         lineItem.variant?.calculated_price?.currency_code || 'EUR'
-       ).toString(),
+       amount: (lineItem.unit_price || 0).toString(),
        currencyCode: lineItem.variant?.calculated_price?.currency_code?.toUpperCase() || 'EUR'
      }
    };
@@ -213,7 +210,7 @@ const reshapeProduct = (product: StoreProduct): Product  => {
    const reshapeOption  = (o: StoreProductOption) =>reshapeProductOption(o, product )
    const p  = {
     ...product,
-    priceRange:   { maxVariantPrice: { amount: convertToDecimal(firstVariant?.calculated_price?.calculated_amount || 0, firstVariant?.calculated_price?.currency_code || "usd").toString(), currencyCode: firstVariant?.calculated_price?.currency_code?.toUpperCase() || "USD" } },
+    priceRange:   { maxVariantPrice: { amount: (firstVariant?.calculated_price?.calculated_amount || 0 ).toString(), currencyCode: firstVariant?.calculated_price?.currency_code?.toUpperCase() || "USD" } },
     createdAt: new Date(product.created_at as string),
     updatedAt: new Date(product.updated_at  as string),
     tags: product.tags?.map((t: any) => t.value) || [],
