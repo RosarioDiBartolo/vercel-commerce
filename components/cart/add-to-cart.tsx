@@ -9,12 +9,12 @@ import WithSuspense from 'lib/with-suspense';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 
-export const AddToCart = WithSuspense<{
-  variants: ProductVariant[];
-  availableForSale: boolean;
-}>(  ({
+export const AddToCart = WithSuspense(  ({
   variants,
   availableForSale
+}: {
+  variants: ProductVariant[];
+  availableForSale: boolean;
 }) =>{
   const router = useRouter();
   const searchParams = useSearchParams();

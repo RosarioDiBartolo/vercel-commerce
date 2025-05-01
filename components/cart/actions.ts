@@ -31,7 +31,9 @@ export const addItem = async (variantId: string | undefined): Promise<String | u
 };
 
 export const removeItem = async (lineId: string): Promise<String | undefined> => {
-  const cartId = cookies().get('cartId')?.value;
+  const Cookies  = await cookies()
+
+  const cartId = Cookies.get('cartId')?.value;
 
   if (!cartId) {
     return 'Missing cart ID';
@@ -52,7 +54,9 @@ export const updateItemQuantity = async ({
   variantId: string;
   quantity: number;
 }): Promise<String | undefined> => {
-  const cartId = cookies().get('cartId')?.value;
+  const Cookies  = await cookies()
+
+  const cartId = Cookies.get('cartId')?.value;
 
   if (!cartId) {
     return 'Missing cart ID';

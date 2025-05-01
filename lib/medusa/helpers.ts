@@ -1,5 +1,4 @@
-import { RegionCountryDTO, StoreProductVariant, StoreRegion } from "@medusajs/types";
-import { isEmpty } from "lib/utils";
+import { StoreProductVariant, StoreRegion } from "@medusajs/types";
 import { Money } from "./types";
 
 type ComputeAmountParams = {
@@ -43,6 +42,4 @@ export const convertToDecimal = (amount: number, currencyCode = 'USD') => {
   return Math.floor(amount) / divisor;
 };
 
-const getTaxRate = (region?: RegionCountryDTO) => {
-  return region && !isEmpty(region) ? region?.tax_rate / 100 : 0;
-};
+ 
