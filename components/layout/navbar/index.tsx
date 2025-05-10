@@ -26,7 +26,7 @@ export default async function Navbar() {
           >
             <LogoSquare />
             <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block">
-              {SITE_NAME}
+              𝒞𝑜𝓃𝓈𝑜𝓁𝒾 ℬ𝒶𝓇𝒷𝑒𝓇 
             </div>
           </Link>
           {menu.length ? (
