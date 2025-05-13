@@ -41,7 +41,7 @@ export default WithSuspense( function Search() {
         autoComplete="off"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
-        className="w-full rounded-lg border bg-white px-4 py-2 text-sm text-black placeholder:text-neutral-500 dark:border-neutral-800 dark:bg-transparent dark:text-white dark:placeholder:text-neutral-400"
+        className="w-full rounded-lg border bg-background px-4 py-2 text-sm text-foreground placeholder:text-neutral-500  border-neutral-800  bg-transparent  text-white  placeholder:text-neutral-400"
       />
       <div className="absolute right-0 top-0 mr-3 flex h-full items-center">
         <MagnifyingGlassIcon className="h-4" />

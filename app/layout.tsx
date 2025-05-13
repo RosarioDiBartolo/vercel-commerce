@@ -1,4 +1,6 @@
+import Footer from 'components/layout/footer';
 import Navbar from 'components/layout/navbar';
+import AnimatedHr from 'components/layout/navbar/animated-hr';
 import { Inter } from 'next/font/google';
 import { ReactNode, Suspense } from 'react';
 import './styles/globals.css';
@@ -38,11 +40,18 @@ const inter = Inter({
 export default async function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="bg-neutral-50 text-black selection:bg-teal-300 dark:bg-neutral-900 dark:text-white dark:selection:bg-pink-500 dark:selection:text-white">
+      <body className=" bg-secondary text-foreground selection:bg-pink-500 selection:text-white 
+       h-svh flex flex-col">
+        <header>
+          
         <Navbar />
+      <AnimatedHr />
+        </header> 
+      <main className=''>{children}</main>
+
         <Suspense>
-          <main>{children}</main>
-        </Suspense>
+          <Footer />
+         </Suspense>
       </body>
     </html>
   );

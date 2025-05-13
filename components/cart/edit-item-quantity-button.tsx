@@ -49,11 +49,11 @@ export default function EditItemQuantityButton({
       )}
     >
       {isPending ? (
-        <LoadingDots className="bg-black dark:bg-white" />
+        <LoadingDots className="bg-black  bg-background" />
       ) : type === 'plus' ? (
-        <PlusIcon className="h-4 w-4 dark:text-neutral-500" />
+        <PlusIcon className="h-4 w-4  text-neutral-500" />
       ) : (
-        <MinusIcon className="h-4 w-4 dark:text-neutral-500" />
+        <MinusIcon className="h-4 w-4  text-neutral-500" />
       )}
     </button>
   );

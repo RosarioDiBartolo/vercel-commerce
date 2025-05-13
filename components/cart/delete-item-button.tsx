@@ -35,9 +35,9 @@ export default function DeleteItemButton({ item }: { item: CartItem }) {
       )}
     >
       {isPending ? (
-        <LoadingDots className="bg-white" />
+        <LoadingDots className="bg-background" />
       ) : (
-        <CloseIcon className="hover:text-accent-3 mx-[1px] h-4 w-4 text-white dark:text-black" />
+        <CloseIcon className="hover:text-accent-3 mx-[1px] h-4 w-4 text-foreground  text-foreground" />
       )}
     </button>
   );
