@@ -83,7 +83,7 @@ export default async function ProductPage({ params }: { params: Promise< { handl
         }}
       />
       <div className="mx-auto max-w-screen-2xl px-4">
-        <div className="flex flex-col rounded-lg border border-neutral-200 bg-background p-8  border-neutral-800  bg-black md:p-12 lg:flex-row">
+        <div className="flex flex-col rounded-lg border  bg-background p-8  border-border   md:p-12 lg:flex-row">
           <div className="h-full w-full basis-full lg:basis-4/6">
             <Gallery
               images={product.images!.map((image: Image) => ({

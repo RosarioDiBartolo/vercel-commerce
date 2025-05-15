@@ -18,7 +18,7 @@ async function CategoriesList() {
   return (
     <AnimatedTabs
       tabs={Tabs}
-      defaultTab={categories[0].id}
+      defaultTab={categories[0]?.id}
       className="rounded-lg bg-zinc-100 p-1"
        
     />
