@@ -40,16 +40,16 @@ const inter = Inter({
 export default async function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className=" bg-secondary text-foreground selection:bg-pink-500 selection:text-white 
+      <body className=" w-screen  bg-secondary text-foreground selection:bg-pink-500 selection:text-white 
        h-svh flex flex-col">
-        <header>
-          
-        <Navbar />
-      <AnimatedHr />
+        <header className=' sticky top-0 z-50'>
+          <Navbar />
+          <AnimatedHr />
         </header> 
-      <main className=''>{children}</main>
-
-        <Suspense>
+          <main className=' flex-1'>
+            {children}
+            </main>
+         <Suspense>
           <Footer />
          </Suspense>
       </body>

@@ -16,10 +16,10 @@ export default async function Footer() {
   const copyrightName = COMPANY_NAME || SITE_NAME || '';
 
   return (
-    <footer className="text-sm   text-neutral-400">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 border-t border-neutral-200 px-6 py-12 text-sm  border-neutral-700 md:flex-row md:gap-12 md:px-4 xl:px-0">
+    <footer className="text-sm border-t  border-neutral-700  text-foreground">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6    px-6 py-12 text-sm    md:flex-row md:gap-12 md:px-4 xl:px-0">
         <div>
-          <Link className="flex items-center gap-2    text-white md:pt-1" href="/">
+          <Link className="flex items-center gap-2    md:pt-1" href="/">
             <LogoSquare size="sm" />
             <span className=" italic font-lobster text-2xl ">  Consoli Barber </span>
           </Link>

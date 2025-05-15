@@ -1,35 +1,28 @@
-"use server"
-import { buttonVariants } from "@/components/ui/button";
+"use server";
+
+import { AnimatedTabs, Tab } from "@/components/ui/animated-tabs"; // adjust path if needed
 import { getCategories } from "lib/medusa";
-import Link from "next/link";
+import CategoryPreview from "./category-preview";
 
 async function CategoriesList() {
   const categories = await getCategories();
-
-    return (
-    <ul className=" flex gap-2">
-        {categories.map(
-            c=> (
-              
-               <li key={c.id}  >
-                <Link
-              
-              href={c.path}
-                    className={
-                      buttonVariants({
-                        variant:"outline",
-                        className: " font-lobster tracking-tighter  rounded-2xl border border-dashed p-3    "})
-                    }
-                  >
-                   
-                {c.title}
-                </Link>
-                </li>
-             
-            )
-        )}
-  </ul>
+  const Tabs: Tab[] = categories.map(
+    c=> ({
+      id: c.id, 
+      label: c.title,
+      content: <CategoryPreview {...c}  />
+    })
   )
+  if (categories.length === 0) return null;
+
+  return (
+    <AnimatedTabs
+      tabs={Tabs}
+      defaultTab={categories[0].id}
+      className="rounded-lg bg-zinc-100 p-1"
+       
+    />
+  );
 }
 
-export default CategoriesList
+export default CategoriesList;

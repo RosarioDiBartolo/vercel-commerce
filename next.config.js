@@ -1,3 +1,5 @@
+  
+
 /** @type {import('next').NextConfig} */
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -15,6 +17,12 @@ module.exports = {
         protocol: 'https',
         hostname: 'medusa-public-images.s3.eu-west-1.amazonaws.com',
         pathname: '/**',
+      },
+      {
+        protocol: "https",
+        hostname: "link-hover-lndev.vercel.app",
+                pathname: '/**',
+
       },
       {
         protocol: 'https',

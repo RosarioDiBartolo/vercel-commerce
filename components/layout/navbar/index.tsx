@@ -3,6 +3,7 @@ import Cart from 'components/cart';
 import OpenCart from 'components/cart/open-cart';
 import { getMenu } from 'lib/medusa';
 import { Menu } from 'lib/medusa/types';
+import Image from "next/image";
 import Link from 'next/link';
 import { Suspense } from 'react';
 import MobileMenu from './mobile-menu';
@@ -13,20 +14,19 @@ export default async function Navbar() {
   const menu = await getMenu('next-js-frontend-header-menu');
 
   return (
-    <nav className="relative bg-primary text-primary-foreground flex items-center justify-between p-4 lg:px-44">
+    <nav className="relative  bg-background text-foreground    flex items-center justify-between p-4 lg:px-44">
       <div className="block flex-none md:hidden">
         <MobileMenu menu={menu} />
       </div>
-      <div className="flex w-full justify-between items-center">
-        <div className="flex items-center   ">
+      <div className="flex   w-full justify-between items-center">
+        <div className="flex items-center gap-5   ">
           <Link
             href="/"
             aria-label="Go back home"
-            className="mr-2 flex w-full items-end justify-center md:w-auto lg:mr-6"
+            className="text-3xl leading-0 h-10 w-64 relative   font-extrabold italic         "
           >
-              <div className="ml-2 flex-none text-3xl font-imperial italic   md:hidden lg:block">
-               {SITE_NAME}
-            </div>
+                <Image  src={"/Consoli.jpg"} alt='logo' className=' object-cover'  layout='fill' />
+            
           </Link>
           {menu.length ? (
             <ul className="hidden gap-6 text-sm md:flex md:items-center">
@@ -34,7 +34,7 @@ export default async function Navbar() {
                 <li key={item.title}>
                   <Link
                     href={item.path}
-                    className="text-neutral-500 underline-offset-4 hover:text-foreground hover:underline   "
+                    className=" transition text-muted-foreground underline-offset-4 hover:text-primary-foreground hover:underline   "
                   >
                     {item.title}
                   </Link>
